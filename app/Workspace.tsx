@@ -6,35 +6,40 @@ declare global {
             ready: (callback: () => void) => void;
             workspace: (containerId: string) => {
                 destroy: () => void;
+                events: {
+                    subscribe: (eventName: string, callback: (e: any) => void) => void;
+                };
             }
         };
-        }
+    }
 }
 
-const Workspace: React.FC<{ workspaceId: string}> = ({workspaceId}) => {
+const Workspace: React.FC<{ workspaceId: string }> = ({workspaceId}) => {
 
     const [wsCreated, setWsCreated] = useState<boolean>(false);
+
 
     useEffect(() => {
         window.SE?.ready(() => {
             const createWorkspace = () => {
-                console.log("Creating workspace")
-                window.SE?.workspace("se-container")
-                setWsCreated(true);
+                if (!wsCreated) {
+                    console.log("Creating workspace")
+                    window.SE?.workspace("se-container")
+                    setWsCreated(true)
+                }
             };
 
             createWorkspace();
         })
 
-
         return () => {
-            console.log("Destroying workspace")
-            if(wsCreated) {
+            if (wsCreated) {
+                console.log("Destroying workspace")
                 window.SE?.workspace("se-container").destroy();
                 setWsCreated(false);
             }
         }
-    }, []);
+    }, [wsCreated]); //either wsCreated or remove the array altogether
 
     return (
         <div style={{width: '100%', height: '100%'}}>
