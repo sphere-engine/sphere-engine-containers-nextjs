@@ -7,8 +7,8 @@ declare global {
             workspace: (containerId: string) => {
                 destroy: () => void;
                 events: {
-                    subscribe: any
-                    unsubscribe: any
+                    subscribe: any;
+                    unsubscribe: any;
                 };
             }
         };
@@ -21,6 +21,7 @@ const Workspace: React.FC<{ workspaceId: string }> = ({workspaceId}) => {
     useEffect(() => {
         window.SE?.ready(() => {
             const createWorkspace = () => {
+                console.log('Creating workspace')
                 if (!wsCreated) {
                     window.SE?.workspace("se-container")
                     setWsCreated(true)
@@ -32,6 +33,7 @@ const Workspace: React.FC<{ workspaceId: string }> = ({workspaceId}) => {
 
         return () => {
             if (wsCreated) {
+                console.log('Destroying workspace')
                 window.SE?.workspace("se-container").destroy();
                 setWsCreated(false);
             }

@@ -1,17 +1,8 @@
 'use client'
 
-import React, {ReactNode, useEffect, useRef, useState} from 'react';
-import Workspace from "./Workspace";
-import Script from "next/script";
-import Modal from "react-modal";
-import EventLogger from "./EventLogger";
+import React, {ReactNode, useRef, useState} from 'react'; import Workspace from "./Workspace"; import Script from "next/script"; import Modal from "react-modal"; import EventLogger from "./EventLogger";
 
-const WorkspacePage = () => {
-    const workspaceId = useRef<string>("");
-    const [workspace, setWorkspace] = useState<ReactNode>(null);
-    const [visible, setVisible] = useState<boolean>(true);
-    const message = useRef<string>("Create a workspace to get started!");
-    const isModalOpen = useRef<boolean>(false);
+const WorkspacePage = () => { const workspaceId = useRef<string>(""); const [workspace, setWorkspace] = useState<ReactNode>(null); const [visible, setVisible] = useState<boolean>(true); const message = useRef<string>("Create a workspace to get started!"); const isModalOpen = useRef<boolean>(false);
 
     const openModal = () => {
         if (!workspace) {
@@ -27,7 +18,6 @@ const WorkspacePage = () => {
         isModalOpen.current = false;
         setVisible(true)
     }
-
 
     const handleCreateWorkspace = () => {
         message.current = "Loading workspace..."
@@ -53,7 +43,7 @@ const WorkspacePage = () => {
         visible ? (message.current = "Workspace is hidden") : (message.current = "Loading ...");
     }
 
-    // @ts-ignore
+// @ts-ignore
     return (
         <div className="flex row">
 
@@ -70,7 +60,7 @@ const WorkspacePage = () => {
             </div>
 
             {/*Workspace Management Part*/}
-            <div className="flex grow flex-col items-center mt-3 w-[25%]">
+            <div className="flex grow flex-col items-center m-auto w-[25%]">
                 <p className="text-xl text-center">Workspace Management</p>
                 <div className="ml-3 mr-3 mt-5 w-[90%]">
                     <div className="flex row w">
@@ -83,17 +73,17 @@ const WorkspacePage = () => {
                             }}
                         />
                         <button onClick={handleCreateWorkspace} className="w-[70%] bg-violet-700 text-white px-3 h-8 mt-2 rounded-md
-                text-md font-medium mb-2 hover:bg-violet-900">Create Workspace
+            text-md font-medium mb-2 hover:bg-violet-900">Create Workspace
                         </button>
                     </div>
                     <button onClick={handleRemoveWorkspace} className="w-full bg-violet-700 text-white px-3 h-8 mt-2 rounded-md
-                text-md font-medium mb-2 hover:bg-violet-900">Remove Workspace
+            text-md font-medium mb-2 hover:bg-violet-900">Remove Workspace
                     </button>
                     <button onClick={handleWorkspaceVisibility} className="w-full bg-violet-700 text-white px-3 h-8 mt-2 rounded-md
-                text-md font-medium mb-2 hover:bg-violet-900">{visible ? "Hide" : "Show "} Workspace
+            text-md font-medium mb-2 hover:bg-violet-900">{visible ? "Hide" : "Show "} Workspace
                     </button>
                 </div>
-                <p className="text-xl text-center mt-5">Events</p>
+                <p className="text-xl text-center mt-3">Events</p>
 
                 <EventLogger workspace={workspace} />
 
@@ -101,7 +91,7 @@ const WorkspacePage = () => {
                 <div className="flex grow flex-col items-center mt-3">
                     <button
                         onClick={openModal}
-                        className="w-full bg-violet-700 text-white px-3 h-8 mt-2 rounded-md text-md font-medium mb-2 hover:bg-violet-900"
+                        className="w-full bg-violet-700 text-white px-3 h-8 mt-3 rounded-md text-md font-medium mb-2 hover:bg-violet-900"
                     >
                         Open Workspace in Modal
                     </button>
@@ -112,11 +102,11 @@ const WorkspacePage = () => {
                     // @ts-ignore
                     <Modal onClose={closeModal} isOpen={isModalOpen.current}>
                         <div className="h-[86vh] flex flex-col items-center">
-                        {/* Render the workspace component inside the modal */}
+                            {/* Render the workspace component inside the modal */}
                             <div className="h-full w-full">{workspace}</div>
-                        <button onClick={closeModal} className="w-[60%] bg-violet-700 text-white px-3 h-8 mt-2 rounded-md
-                text-md font-medium hover:bg-violet-900">Close Modal
-                        </button>
+                            <button onClick={closeModal} className="w-[60%] bg-violet-700 text-white px-3 h-8 mt-2 rounded-md
+            text-md font-medium hover:bg-violet-900">Close Modal
+                            </button>
                         </div>
                     </Modal>
                 )}
@@ -126,4 +116,4 @@ const WorkspacePage = () => {
     );
 }
 
-export default WorkspacePage;
+export default WorkspacePage
