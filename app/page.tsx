@@ -1,36 +1,67 @@
 'use client'
 
-import React, {ReactNode, useRef, useState} from 'react'; import Workspace from "./Workspace"; import Script from "next/script"; import Modal from "react-modal"; import EventLogger from "./EventLogger";
+import React, {ReactNode, useRef, useState} from 'react';
+import Workspace from "./Workspace";
+import Script from "next/script";
+import Modal from "react-modal";
+import EventLogger from "./EventLogger";
 
-const WorkspacePage = () => { const workspaceId = useRef<string>(""); const [workspace, setWorkspace] = useState<ReactNode>(null); const [visible, setVisible] = useState<boolean>(true); const message = useRef<string>("Create a workspace to get started!"); const isModalOpen = useRef<boolean>(false);
+const WorkspacePage = () => {
+    const workspaceId = useRef<string>("");
+    const [workspace, setWorkspace] = useState<ReactNode | null>(null);
+    const [visible, setVisible] = useState<boolean>(true);
+    const message = useRef<string>("Create a workspace to get started!");
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    const [modalWorkspace, setModalWorkspace] = useState<ReactNode | null>(null);
 
     const openModal = () => {
         if (!workspace) {
             message.current = "Create a workspace to open in modal"
         } else {
-            isModalOpen.current = true;
+            handleCreateWorkspace("modal", true)
+            setIsModalOpen(true)
             setVisible(false)
             message.current = "Workspace opened in modal"
         }
     }
 
     const closeModal = () => {
-        isModalOpen.current = false;
+        setIsModalOpen(false)
+        setModalWorkspace(null)
         setVisible(true)
     }
 
-    const handleCreateWorkspace = () => {
-        message.current = "Loading workspace..."
-        if (workspace) {
-            handleRemoveWorkspace()
+    const handleCreateWorkspace = (placement: string, modal: boolean) => {
+        message.current = "Loading workspace...";
+
+        const createWorkspace = (workspaceComponent: React.ReactNode) => {
+            if (modal) {
+                setModalWorkspace(workspaceComponent);
+            } else {
+                setWorkspace(workspaceComponent);
+            }
+        };
+
+        const removeWorkspace = () => {
+            if (modal) {
+                setModalWorkspace(null);
+            } else {
+                setWorkspace(null);
+            }
+        };
+
+        if (modal && modalWorkspace) {
+            removeWorkspace();
+        } else if (!workspace) {
+            createWorkspace(
+                <Workspace
+                    key={Date.now()}
+                    workspaceId={workspaceId.current}
+                    placement={placement}
+                ></Workspace>
+            );
         }
-        setWorkspace(
-            <Workspace
-                key={Date.now()}
-                workspaceId={workspaceId.current}
-            ></Workspace>
-        );
-    }
+    };
 
     const handleRemoveWorkspace = () => {
         message.current = "Create a workspace to get started!"
@@ -47,8 +78,8 @@ const WorkspacePage = () => { const workspaceId = useRef<string>(""); const [wor
     return (
         <div className="flex row">
 
-            {/*Workspace Part*/}
             <Script src="/seco_sdk.js" strategy={"beforeInteractive"}/>
+
             <div className="w-[75%] h-[100vh] flex">
                 {workspace ?
                     <div className="flex grow h-[100%] justify-center">
@@ -72,7 +103,8 @@ const WorkspacePage = () => { const workspaceId = useRef<string>(""); const [wor
                                 workspaceId.current = e.target.value;
                             }}
                         />
-                        <button onClick={handleCreateWorkspace} className="w-[70%] bg-violet-700 text-white px-3 h-8 mt-2 rounded-md
+                        <button onClick={() => handleCreateWorkspace("main", false)} className="w-[70%] bg-violet-700 text-white px-3 h-8 mt-2 rounded-md
+
             text-md font-medium mb-2 hover:bg-violet-900">Create Workspace
                         </button>
                     </div>
@@ -100,10 +132,9 @@ const WorkspacePage = () => { const workspaceId = useRef<string>(""); const [wor
                 {/* Modal for displaying the workspace */}
                 {isModalOpen && workspace && (
                     // @ts-ignore
-                    <Modal onClose={closeModal} isOpen={isModalOpen.current}>
+                    <Modal onClose={closeModal} isOpen={isModalOpen} ariaHideApp={false}>
                         <div className="h-[86vh] flex flex-col items-center">
-                            {/* Render the workspace component inside the modal */}
-                            <div className="h-full w-full">{workspace}</div>
+                            <div className="h-full w-full">{modalWorkspace}</div>
                             <button onClick={closeModal} className="w-[60%] bg-violet-700 text-white px-3 h-8 mt-2 rounded-md
             text-md font-medium hover:bg-violet-900">Close Modal
                             </button>

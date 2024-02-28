@@ -15,15 +15,14 @@ declare global {
     }
 }
 
-const Workspace: React.FC<{ workspaceId: string }> = ({workspaceId}) => {
+const Workspace: React.FC<{ workspaceId: string, placement: string }> = ({workspaceId, placement}) => {
     const [wsCreated, setWsCreated] = useState<boolean>(false);
 
     useEffect(() => {
         window.SE?.ready(() => {
             const createWorkspace = () => {
-                console.log('Creating workspace')
                 if (!wsCreated) {
-                    window.SE?.workspace("se-container")
+                    window.SE?.workspace(`${placement}-container`)
                     setWsCreated(true)
                 }
             };
@@ -33,16 +32,15 @@ const Workspace: React.FC<{ workspaceId: string }> = ({workspaceId}) => {
 
         return () => {
             if (wsCreated) {
-                console.log('Destroying workspace')
-                window.SE?.workspace("se-container").destroy();
+                window.SE?.workspace(`${placement}-container`).destroy();
                 setWsCreated(false);
             }
         }
-    }, [wsCreated]); //either wsCreated or remove the array altogether
+    }, [placement, wsCreated]);
 
     return (
         <div style={{width: '100%', height: '100%'}}>
-            <div data-id="se-container" data-workspace={workspaceId}></div>
+            <div data-id={placement+"-container"} data-workspace={workspaceId}></div>
         </div>
     );
 };
