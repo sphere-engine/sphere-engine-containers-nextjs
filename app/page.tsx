@@ -2,9 +2,9 @@
 
 import React, {ReactNode, useRef, useState} from 'react';
 import Workspace from "./Workspace";
-import Script from "next/script";
 import Modal from "react-modal";
 import EventLogger from "./EventLogger";
+import SdkLoader from "@/app/SdkLoader";
 
 const WorkspacePage = () => {
     const workspaceId = useRef<string>("");
@@ -52,16 +52,18 @@ const WorkspacePage = () => {
 
         if (modal && modalWorkspace) {
             removeWorkspace();
-        } else if (!workspace) {
-            createWorkspace(
-                <Workspace
-                    key={Date.now()}
-                    workspaceId={workspaceId.current}
-                    placement={placement}
-                ></Workspace>
-            );
+        } else if (workspace) {
+            removeWorkspace();
         }
-    };
+        createWorkspace(
+            <Workspace
+                key={Date.now()}
+                workspaceId={workspaceId.current}
+                placement={placement}
+            ></Workspace>
+        );
+    }
+
 
     const handleRemoveWorkspace = () => {
         message.current = "Create a workspace to get started!"
@@ -74,11 +76,10 @@ const WorkspacePage = () => {
         visible ? (message.current = "Workspace is hidden") : (message.current = "Loading ...");
     }
 
-// @ts-ignore
     return (
         <div className="flex row">
 
-            <Script src="/seco_sdk.js" strategy={"beforeInteractive"}/>
+            <SdkLoader/>
 
             <div className="w-[75%] h-[100vh] flex">
                 {workspace ?
@@ -117,7 +118,7 @@ const WorkspacePage = () => {
                 </div>
                 <p className="text-xl text-center mt-3">Events</p>
 
-                <EventLogger workspace={workspace} />
+                <EventLogger workspace={workspace}/>
 
                 {/* Modal for displaying the workspace */}
                 <div className="flex grow flex-col items-center mt-3">
@@ -142,6 +143,7 @@ const WorkspacePage = () => {
                     </Modal>
                 )}
             </div>
+
 
         </div>
     );

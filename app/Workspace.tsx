@@ -1,19 +1,5 @@
 import React, {useEffect, useState} from 'react';
 
-declare global {
-    interface Window {
-        SE: {
-            ready: (callback: () => void) => void;
-            workspace: (containerId: string) => {
-                destroy: () => void;
-                events: {
-                    subscribe: any;
-                    unsubscribe: any;
-                };
-            }
-        };
-    }
-}
 
 const Workspace: React.FC<{ workspaceId: string, placement: string }> = ({workspaceId, placement}) => {
     const [wsCreated, setWsCreated] = useState<boolean>(false);

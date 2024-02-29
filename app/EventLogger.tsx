@@ -15,7 +15,7 @@ const EventLogger: React.FC<{ workspace: ReactNode }> = ({workspace}) => {
 
     const changeSubscription = (name: string, value: boolean) => {
         if (!workspace) return;
-        const ws = window.SE.workspace("se-container");
+        const ws = window.SE.workspace("main-container");
 
         if (value) {
             const newEventListener = (e: any) => {
