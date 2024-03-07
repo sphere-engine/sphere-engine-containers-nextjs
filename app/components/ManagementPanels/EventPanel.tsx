@@ -1,6 +1,8 @@
-import React, {ReactNode, useEffect, useRef, useState} from "react";
+import React, {useContext, useEffect, useRef, useState} from "react";
+import {WorkspacesContext} from "@/app/components/Reducers/WorkspacesReducer";
 
-const EventLogger: React.FC<{ workspace: ReactNode }> = ({workspace}) => {
+const EventLogger = () => {
+    const workspace = useContext(WorkspacesContext)?.selectedWorkspace;
 
     const [events, setEvents] = useState<string[]>([]);
     const [subscriptions, setSubscriptions] = useState<{ [name: string]: boolean }>({
@@ -15,7 +17,7 @@ const EventLogger: React.FC<{ workspace: ReactNode }> = ({workspace}) => {
 
     const changeSubscription = (name: string, value: boolean) => {
         if (!workspace) return;
-        const ws = window.SE.workspace("main-container");
+        const ws = window.SE.workspace("sec-container");
 
         if (value) {
             const newEventListener = (e: any) => {
@@ -40,8 +42,8 @@ const EventLogger: React.FC<{ workspace: ReactNode }> = ({workspace}) => {
 
     return (
         <>
-            <ul>
-                <li>
+            <ul className="flex justify-center mt-3">
+                <li className="mr-2">
                     <input type="checkbox" id="afterScenarioExecutionExt" name="afterScenarioExecutionExt"
                            value="afterScenarioExecutionExt" className="mr-2"
                            checked={subscriptions.afterScenarioExecutionExt}
@@ -62,7 +64,7 @@ const EventLogger: React.FC<{ workspace: ReactNode }> = ({workspace}) => {
                 </li>
             </ul>
             {/*Event logs*/}
-            <div className="w-[90%] h-[200px] border-gray-300 border-2 rounded-md p-2 no-scrollbar overflow-auto">
+            <div className="w-full h-[200px] border-gray-300 border-2 rounded-md p-2 no-scrollbar overflow-auto">
                 {events.map((event, index) => {
                     return <p key={index}>{JSON.stringify(event)}</p>
                 })}

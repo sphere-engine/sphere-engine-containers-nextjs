@@ -1,14 +1,14 @@
 import React, {useEffect, useState} from 'react';
 
 
-const Workspace: React.FC<{ workspaceId: string, placement: string }> = ({workspaceId, placement}) => {
+const Workspace: React.FC<{ workspaceId: string}> = ({workspaceId}) => {
     const [wsCreated, setWsCreated] = useState<boolean>(false);
 
     useEffect(() => {
         window.SE?.ready(() => {
             const createWorkspace = () => {
                 if (!wsCreated) {
-                    window.SE?.workspace(`${placement}-container`)
+                    window.SE?.workspace(`sec-container`)
                     setWsCreated(true)
                 }
             };
@@ -18,15 +18,15 @@ const Workspace: React.FC<{ workspaceId: string, placement: string }> = ({worksp
 
         return () => {
             if (wsCreated) {
-                window.SE?.workspace(`${placement}-container`).destroy();
+                window.SE?.workspace(`sec-container`).destroy();
                 setWsCreated(false);
             }
         }
-    }, [placement, wsCreated]);
+    }, [workspaceId]);
 
     return (
         <div style={{width: '100%', height: '100%'}}>
-            <div data-id={placement+"-container"} data-workspace={workspaceId}></div>
+            <div data-id={"sec-container"} data-workspace={workspaceId}></div>
         </div>
     );
 };

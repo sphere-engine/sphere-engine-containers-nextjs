@@ -22,3 +22,5 @@ npm run dev
 ```sh
 npm run build
 ```
+
+### After running the application is available at: [http://localhost:3000](http://localhost:3000)
