@@ -1,44 +1,63 @@
 import React, {useContext, useEffect, useRef, useState} from "react";
-import {WorkspacesContext} from "@/app/components/Reducers/WorkspacesReducer";
+import {WorkspacesContext, WorkspacesDispatchContext} from "@/app/components/Reducers/WorkspacesReducer";
 
 const EventLogger = () => {
     const workspace = useContext(WorkspacesContext)?.selectedWorkspace;
-
+    const dispatch = useContext(WorkspacesDispatchContext);
+    const workspaces = useContext(WorkspacesContext);
     const [events, setEvents] = useState<string[]>([]);
-    const [subscriptions, setSubscriptions] = useState<{ [name: string]: boolean }>({
-        afterScenarioExecution: false,
-        afterScenarioExecutionExt: false
-    });
-
+    const subscriptions = workspaces?.available.find((ws) => ws.id === workspace)?.subscriptions;
     const eventListeners = useRef<{ [name: string]: ((e: any) => void) | null }>({
         afterScenarioExecution: null,
         afterScenarioExecutionExt: null
     });
 
-    const changeSubscription = (name: string, value: boolean) => {
-        if (!workspace) return;
-        const ws = window.SE.workspace("sec-container");
-
-        if (value) {
-            const newEventListener = (e: any) => {
-                setEvents(prevState => [...prevState, e.data])
-            };
-            ws.events.subscribe(name, newEventListener);
-
-            eventListeners.current = {...eventListeners.current, [name]: newEventListener};
-        } else {
-            if (eventListeners.current[name]) {
-                ws.events.unsubscribe(name, eventListeners.current[name]);
-            }
-            eventListeners.current = {...eventListeners.current, [name]: null};
-        }
-        setSubscriptions(prevState => ({...prevState, [name]: value}))
-    }
-
-
     useEffect(() => {
         setEvents([]);
     }, [workspace]);
+
+    const toggleSubscription = (name: string) => {
+        if (workspace) {
+            dispatch?.({
+                type: "TOGGLE_SUBSCRIPTION",
+                payload: {
+                    id: workspace,
+                    name: name
+                }
+            })
+        }
+    }
+
+    const eventListener = (e: any) => {
+        setEvents((prev) => [...prev, e.data]);
+    }
+
+    useEffect(() => {
+        if (!workspace) return;
+
+        const ws = window.SE.workspace(workspace + "-container");
+
+        const handleAfterScenarioExecution = (e: any) => {
+            setEvents(prevState => [...prevState, e.data])
+        };
+
+        const handleAfterScenarioExecutionExt = (e: any) => {
+            setEvents(prevState => [...prevState, e.data])
+        };
+
+        if (subscriptions?.afterScenarioExecution) {
+            ws.events.subscribe("afterScenarioExecution", handleAfterScenarioExecution);
+        }
+        if (subscriptions?.afterScenarioExecutionExt) {
+            ws.events.subscribe("afterScenarioExecutionExt", handleAfterScenarioExecutionExt);
+        }
+
+        return () => {
+            ws.events.unsubscribe("afterScenarioExecution", handleAfterScenarioExecution);
+            ws.events.unsubscribe("afterScenarioExecutionExt", handleAfterScenarioExecutionExt);
+        };
+    }, [workspace, subscriptions]);
+
 
     return (
         <>
@@ -46,9 +65,9 @@ const EventLogger = () => {
                 <li className="mr-2">
                     <input type="checkbox" id="afterScenarioExecutionExt" name="afterScenarioExecutionExt"
                            value="afterScenarioExecutionExt" className="mr-2"
-                           checked={subscriptions.afterScenarioExecutionExt}
+                           checked={subscriptions?.afterScenarioExecutionExt}
                            disabled={!workspace}
-                           onChange={() => changeSubscription('afterScenarioExecutionExt', !subscriptions.afterScenarioExecutionExt)}
+                           onClick={() => toggleSubscription("afterScenarioExecutionExt")}
                     />
                     <label htmlFor="afterScenarioExecutionExtExt"
                            className="text-sm mt-1">AfterScenarioExecutionExt</label>
@@ -56,9 +75,9 @@ const EventLogger = () => {
                 <li>
                     <input type="checkbox" id="afterScenarioExecution" name='afterScenarioExecution'
                            value="afterScenarioExecution" className="mr-2"
-                           checked={subscriptions.afterScenarioExecution}
+                           checked={subscriptions?.afterScenarioExecution}
                            disabled={!workspace}
-                           onChange={() => changeSubscription('afterScenarioExecution', !subscriptions.afterScenarioExecution)}
+                           onClick={() => toggleSubscription("afterScenarioExecution")}
                     />
                     <label htmlFor="afterScenarioExecution" className="text-sm mt-1">AfterScenarioExecution</label>
                 </li>

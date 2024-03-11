@@ -10,7 +10,6 @@ const Workspace: React.FC<{ workspaceId: string}> = ({workspaceId}) => {
     useEffect(() => {
         window.SE.ready(() => {
             if(!created) {
-            console.log("Workspace ready")
             window.SE.workspace(elemId);
             setCreated(true);
             }
@@ -20,7 +19,6 @@ const Workspace: React.FC<{ workspaceId: string}> = ({workspaceId}) => {
             if(created) {
                 const ws = window.SE.workspace(elemId);
                 ws.destroy();
-                console.log("Workspace destroyed")
                 setCreated(false)
             }
         }

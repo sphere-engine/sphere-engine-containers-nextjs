@@ -1,17 +1,24 @@
 import {useReducer, createContext, ReactNode, Dispatch} from "react";
 
 type State = {
-    ids: string[];
+    available: Workspace[];
     selectedWorkspace: string | null;
 };
 
 type Action = {
     type: string;
-    payload: string;
+    payload: string | { id: string, name: string }
 };
 
+type Workspace = {
+    id: string,
+    subscriptions: {
+        [name: string]: boolean
+    }
+}
+
 const initialState: State = {
-    ids: [],
+    available: [],
     selectedWorkspace: null,
 };
 
@@ -34,12 +41,17 @@ export function WorkspacesProvider({children}: Readonly<{ children: ReactNode; }
 export function workspacesReducer(state: any, action: any) {
     switch (action.type) {
         case "CREATE_WORKSPACE":
-            if (state.ids.includes(action.payload)) {
+            if (state.available.find((ws: Workspace) => ws.id === action.payload)) {
                 return state;
             }
             return {
                 ...state,
-                ids: [...state.ids, action.payload],
+                available: [...state.available, {
+                    id: action.payload, subscriptions: {
+                        afterScenarioExecution: false,
+                        afterScenarioExecutionExt: false
+                    }
+                }]
             };
         case "SELECT_WORKSPACE":
             return {
@@ -50,18 +62,35 @@ export function workspacesReducer(state: any, action: any) {
             if (state.selectedWorkspace === action.payload) {
                 return {
                     ...state,
-                    ids: state.ids.filter((id: string) => id !== action.payload),
                     selectedWorkspace: null,
+                    available: state.available.filter((ws: Workspace) => ws.id !== action.payload)
                 };
             }
             return {
                 ...state,
-                ids: state.ids.filter((id: string) => id !== action.payload),
+                available: state.available.filter((ws: Workspace) => ws.id !== action.payload)
             };
+        case "TOGGLE_SUBSCRIPTION":
+            return {
+                ...state,
+                available: state.available.map((ws: Workspace) => {
+                    if (ws.id === action.payload.id) {
+                        return {
+                            ...ws,
+                            subscriptions: {
+                                ...ws.subscriptions,
+                                [action.payload.name]: !ws.subscriptions[action.payload.name]
+                            }
+                        }
+                    }
+                    return ws;
+                })
+            }
+
         default:
             return state;
+
     }
 }
-
 
 export {WorkspacesContext, WorkspacesDispatchContext};
