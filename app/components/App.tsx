@@ -15,22 +15,34 @@ export const App = () => {
     }
 
     useEffect(() => {
-        if (workspaces?.selectedWorkspace){
-            setWorkspace(<Workspace workspaceId={workspaces.selectedWorkspace}/>);
-            console.log("workspace changed")
+        if (workspaces?.selectedWorkspace) {
+            setWorkspace(<Workspace workspaceId={workspaces?.selectedWorkspace} key={Date.now()}/>)
+        } else {
+            setWorkspace(null);
         }
-
-    }, [workspaces?.selectedWorkspace]);
+    }, [workspaces?.selectedWorkspace])
 
     return (
-        <div className="flex row w-full">
+        <div className="flex row w-full justify-between h-full">
+
             <ScriptLoader/>
-            <div className="w-[75%]">
-                {workspace}
+
+            <div className="w-[75%] h-[100vh]">
+                {workspace ?
+                    <div className="flex justify-center h-[100%]">
+                        <div className="flex grow" style={{display: visible ? "block" : "none"}}>{workspace}</div>
+                        <div className="text-center m-auto text-2xl"
+                             style={{display: !visible ? "block" : "none"}}>Workspace Hidden</div>
+                    </div> :
+                    <div className="flex justify-center h-[100%]">
+                        <p className="text-center m-auto text-2xl">Select a WS to start</p>
+                    </div>}
             </div>
-            <div className="w-[25%] mr-6">
+
+            <div className="w-[22%] mr-6">
                 <Panel visible={visible} handleWorkspaceVisibility={handleWorkspaceVisibility}/>
             </div>
+
         </div>
     )
 }

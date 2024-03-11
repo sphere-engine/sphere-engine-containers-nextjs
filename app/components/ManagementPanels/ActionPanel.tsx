@@ -16,7 +16,6 @@ const ActionPanel: React.FC<PanelProps> = ({visible, handleWorkspaceVisibility})
         if (dispatch) {
             dispatch({type: "CREATE_WORKSPACE", payload: workspaceId});
         }
-        inputRef.current = "";
     }
 
     const selectWorkspace = (id: string) => {
@@ -34,8 +33,8 @@ const ActionPanel: React.FC<PanelProps> = ({visible, handleWorkspaceVisibility})
     return (
         <div className="mt-2">
             <p className="text-xl text-center font-bold">Workspace Management</p>
-            <div className="ml-3 mr-3 mt-3 w-[100%]">
-                <div className="flex column w-[98%]">
+            <div className="mt-3 w-[100%]">
+                <div className="flex column w-[100%]">
                     <input
                         className="w-full h-8 rounded-md text-xs text-center font-medium mb-2 p-1 border-2 border-gray-300 mr-2"
                         type="text"
@@ -53,17 +52,18 @@ const ActionPanel: React.FC<PanelProps> = ({visible, handleWorkspaceVisibility})
                     </button>
                 </div>
                 <div className="w-full">
-                    <p className="text-md text-center mt-5 mb-2">Available WS:</p>
-                    <div className="flex row flex-wrap mb-5">
+                    <p className="text-md text-center mt-3 mb-2">Available WS:</p>
+                    <div className="flex row flex-wrap mb-5 justify-between">
                         {workspaces?.ids.length === 0 && <p className="text-center w-full">No Workspaces Available</p>}
                         {workspaces?.ids.map((id: string) => (
                             <button key={id} onClick={() => selectWorkspace(id)}
                                     style={{
                                         backgroundColor: workspaces?.selectedWorkspace === id ? "violet" : "white",
                                         width: workspaces.ids?.length > 2 ? (100 / workspaces?.ids.length + "%") : "100%",
-                                        minWidth: "48%"
+                                        minWidth: "49.5%",
+                                        fontSize: workspaces.ids?.length > 2 ? "0.68rem" : "0.8rem"
                                     }}
-                                    className="h-8 m-1 border-2 border-gray-400 rounded-md text-xs font-medium">
+                                    className="h-8 mb-1 border-2 border-gray-400 rounded-md font-medium">
                                 {id}
                             </button>
                         ))}
