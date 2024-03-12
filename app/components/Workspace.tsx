@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 
-
 const Workspace: React.FC<{ workspaceId: string}> = ({workspaceId}) => {
 
     const elemId = workspaceId + "-container";
