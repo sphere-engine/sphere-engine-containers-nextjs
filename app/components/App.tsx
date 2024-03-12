@@ -16,7 +16,7 @@ export const App = () => {
 
     useEffect(() => {
         if (workspaces?.selectedWorkspace) {
-            setWorkspace(<Workspace workspaceId={workspaces?.selectedWorkspace} key={Date.now()}/>)
+            setWorkspace(<Workspace workspaceId={workspaces?.selectedWorkspace} key={Date.now()}/>) // bez key przy zmianie workspace nie renderuje sie od nowa (#3)
         } else {
             setWorkspace(null);
         }

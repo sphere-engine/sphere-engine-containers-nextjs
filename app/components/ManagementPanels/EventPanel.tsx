@@ -5,16 +5,38 @@ const EventLogger = () => {
     const workspace = useContext(WorkspacesContext)?.selectedWorkspace;
     const dispatch = useContext(WorkspacesDispatchContext);
     const workspaces = useContext(WorkspacesContext);
-    const [events, setEvents] = useState<string[]>([]);
-    const subscriptions = workspaces?.available.find((ws) => ws.id === workspace)?.subscriptions;
+    const events = workspaces?.available.find((ws) => ws.id === workspace)?.events;
+    const subscriptions = workspaces?.available.find((ws) => ws.id === workspace)?.subscriptions || {
+        afterScenarioExecution: false,
+        afterScenarioExecutionExt: false
+    };
     const eventListeners = useRef<{ [name: string]: ((e: any) => void) | null }>({
         afterScenarioExecution: null,
         afterScenarioExecutionExt: null
     });
 
-    useEffect(() => {
-        setEvents([]);
-    }, [workspace]);
+    // const EventLogger = (e: any) => {
+    //     setEvents(prevState => [...prevState, e.data])
+    // }
+    //
+    //  ws.events.subscribe("afterScenarioExecution", EventLogger)
+    // ws.events.subscribe("afterScenarioExecutionExt", EventLogger)
+    //
+    //  ws.events.unsubscribe("afterScenarioExecution", EventLogger)
+    // ws.events.unsubscribe("afterScenarioExecutionExt", EventLogger)
+    // jak ta funkcja jest uzyta zamiast w to wystepuje warn "specified callback does not exist", ale same subskrypcje dalej działaja(#4)
+
+    const addEvent = (e: any) => {
+        if (workspace) {
+            dispatch?.({
+                type: "ADD_EVENT",
+                payload: {
+                    id: workspace,
+                    event: JSON.stringify(e)
+                }
+            })
+        }
+    }
 
     const toggleSubscription = (name: string) => {
         if (workspace) {
@@ -26,38 +48,19 @@ const EventLogger = () => {
                 }
             })
         }
-    }
-
-    const eventListener = (e: any) => {
-        setEvents((prev) => [...prev, e.data]);
-    }
-
-    useEffect(() => {
-        if (!workspace) return;
 
         const ws = window.SE.workspace(workspace + "-container");
 
-        const handleAfterScenarioExecution = (e: any) => {
-            setEvents(prevState => [...prevState, e.data])
-        };
-
-        const handleAfterScenarioExecutionExt = (e: any) => {
-            setEvents(prevState => [...prevState, e.data])
-        };
-
-        if (subscriptions?.afterScenarioExecution) {
-            ws.events.subscribe("afterScenarioExecution", handleAfterScenarioExecution);
+        if (eventListeners.current[name]) {
+            ws.events.unsubscribe(name, eventListeners.current[name]!);
+            eventListeners.current[name] = null;
+        } else {
+            eventListeners.current[name] = (e: any) => {
+                addEvent(e);
+            }
+            ws.events.subscribe(name, eventListeners.current[name]!);
         }
-        if (subscriptions?.afterScenarioExecutionExt) {
-            ws.events.subscribe("afterScenarioExecutionExt", handleAfterScenarioExecutionExt);
-        }
-
-        return () => {
-            ws.events.unsubscribe("afterScenarioExecution", handleAfterScenarioExecution);
-            ws.events.unsubscribe("afterScenarioExecutionExt", handleAfterScenarioExecutionExt);
-        };
-    }, [workspace, subscriptions]);
-
+    }
 
     return (
         <>
@@ -67,7 +70,7 @@ const EventLogger = () => {
                            value="afterScenarioExecutionExt" className="mr-2"
                            checked={subscriptions?.afterScenarioExecutionExt}
                            disabled={!workspace}
-                           onClick={() => toggleSubscription("afterScenarioExecutionExt")}
+                           onChange={() => toggleSubscription("afterScenarioExecutionExt")}
                     />
                     <label htmlFor="afterScenarioExecutionExtExt"
                            className="text-sm mt-1">AfterScenarioExecutionExt</label>
@@ -77,16 +80,18 @@ const EventLogger = () => {
                            value="afterScenarioExecution" className="mr-2"
                            checked={subscriptions?.afterScenarioExecution}
                            disabled={!workspace}
-                           onClick={() => toggleSubscription("afterScenarioExecution")}
+                           onChange={() => toggleSubscription("afterScenarioExecution")}
                     />
                     <label htmlFor="afterScenarioExecution" className="text-sm mt-1">AfterScenarioExecution</label>
                 </li>
             </ul>
             {/*Event logs*/}
             <div className="w-full h-[200px] border-gray-300 border-2 rounded-md p-2 no-scrollbar overflow-auto">
-                {events.map((event, index) => {
-                    return <p key={index}>{JSON.stringify(event)}</p>
-                })}
+                <ul>
+                    {events?.map((event, index) => (
+                        <li key={index} className="text-xs">{event}</li>
+                    ))}
+                </ul>
             </div>
         </>
     )

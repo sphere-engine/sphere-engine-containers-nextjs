@@ -12,17 +12,19 @@ const Workspace: React.FC<{ workspaceId: string}> = ({workspaceId}) => {
             if(!created) {
             window.SE.workspace(elemId);
             setCreated(true);
+            console.log("Workspace created")
             }
         })
 
         return () => {
             if(created) {
                 const ws = window.SE.workspace(elemId);
-                ws.destroy();
+                ws?.destroy();
                 setCreated(false)
+                console.log("Workspace destroyed")
             }
         }
-    }, [created, elemId]);
+    }, [created, elemId]); // bez created w zależnościach, workspace nie renderuje się od nowa (#1)
 
     return (
         <div style={{width: '100%', height: '100%'}}>

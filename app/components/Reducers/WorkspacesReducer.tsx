@@ -7,7 +7,7 @@ type State = {
 
 type Action = {
     type: string;
-    payload: string | { id: string, name: string }
+    payload: string | { id: string, name: string } | { id: string, event: string };
 };
 
 type Workspace = {
@@ -15,6 +15,7 @@ type Workspace = {
     subscriptions: {
         [name: string]: boolean
     }
+    events: string[]
 }
 
 const initialState: State = {
@@ -50,7 +51,7 @@ export function workspacesReducer(state: any, action: any) {
                     id: action.payload, subscriptions: {
                         afterScenarioExecution: false,
                         afterScenarioExecutionExt: false
-                    }
+                    }, events: []
                 }]
             };
         case "SELECT_WORKSPACE":
@@ -81,6 +82,19 @@ export function workspacesReducer(state: any, action: any) {
                                 ...ws.subscriptions,
                                 [action.payload.name]: !ws.subscriptions[action.payload.name]
                             }
+                        }
+                    }
+                    return ws;
+                })
+            };
+        case "ADD_EVENT":
+            return {
+                ...state,
+                available: state.available.map((ws: Workspace) => {
+                    if (ws.id === action.payload.id) {
+                        return {
+                            ...ws,
+                            events: [...ws.events, action.payload.event]
                         }
                     }
                     return ws;
