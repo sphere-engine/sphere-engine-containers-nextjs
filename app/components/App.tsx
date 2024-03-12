@@ -56,12 +56,12 @@ export const App = () => {
 
 
     useEffect(() => {
-        if (workspaces?.selectedWorkspace && rendered) {
+        if (workspaces?.selectedWorkspace && rendered && !modal) {
             setWorkspace(<Workspace workspaceId={workspaces?.selectedWorkspace} key={Date.now()}/>) // bez key przy zmianie workspace nie renderuje sie od nowa (#3)
         } else {
             setWorkspace(null);
         }
-    }, [rendered, workspaces?.selectedWorkspace])
+    },[modal, rendered, workspaces?.selectedWorkspace])
 
     return (
         <div className="flex row w-full justify-between h-full">

@@ -1,17 +1,15 @@
 import React, {useEffect, useState} from 'react';
 
 const Workspace: React.FC<{ workspaceId: string}> = ({workspaceId}) => {
-
     const elemId = workspaceId + "-container";
     const [created, setCreated] = useState<boolean>(false);
-
 
     useEffect(() => {
         window.SE.ready(() => {
             if(!created) {
-            window.SE.workspace(elemId);
-            setCreated(true);
-            console.log("Workspace created")
+                window.SE.workspace(elemId);
+                setCreated(true);
+                console.log("Workspace created")
             }
         })
 
@@ -23,7 +21,7 @@ const Workspace: React.FC<{ workspaceId: string}> = ({workspaceId}) => {
                 console.log("Workspace destroyed")
             }
         }
-    }, [created, elemId]); // bez created w zależnościach, workspace nie renderuje się od nowa (#1)
+    }, [created]);
 
     return (
         <div style={{width: '100%', height: '100%'}}>
