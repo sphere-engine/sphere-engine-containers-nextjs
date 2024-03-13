@@ -1,6 +1,7 @@
 import React, {useRef, useContext} from 'react';
 import {WorkspacesDispatchContext} from "@/app/components/Reducers/WorkspacesReducer";
 import {WorkspacesContext} from "@/app/components/Reducers/WorkspacesReducer";
+import {CreateWsPanel} from "@/app/components/ManagementPanels/CreateWsPanel";
 
 interface PanelProps {
     visible: boolean;
@@ -33,10 +34,11 @@ const ActionPanel: React.FC<PanelProps> = ({visible, handleWorkspaceVisibility})
     return (
         <div className="mt-2">
             <p className="text-xl text-center font-bold">Workspace Management</p>
-            <div className="mt-3 w-[100%]">
+            <div className="mt-1 w-[100%]">
+                <p className="text-center text-sm text-gray-500 font-light">add existing</p>
                 <div className="flex column w-[100%]">
                     <input
-                        className="w-full h-8 rounded-md text-xs text-center font-medium mb-2 p-1 border-2 border-gray-300 mr-2"
+                        className="w-full h-8 rounded-md text-xs text-center font-medium mb-1 p-1 border-2 border-gray-300 mr-2"
                         type="text"
                         placeholder="Enter Workspace ID"
                         onChange={(e) => {
@@ -47,14 +49,19 @@ const ActionPanel: React.FC<PanelProps> = ({visible, handleWorkspaceVisibility})
                         onClick={() => {
                             createWorkspace(inputRef.current);
                         }}
-                        className="w-[70%] bg-violet-700 text-white px-3 h-8 rounded-md text-md font-medium mb-2 hover:bg-violet-900">
+                        className="w-[70%] bg-violet-700 text-white px-3 h-8 rounded-md text-md font-medium mb-1 hover:bg-violet-900">
                         Add Workspace ID
                     </button>
                 </div>
                 <div className="w-full">
+                <p className="text-center text-sm text-gray-500  font-light">or create new</p>
+                <CreateWsPanel/>
+                </div>
+                <div className="w-full">
                     <p className="text-md text-center mt-3 mb-2">Available WS:</p>
                     <div className="flex row flex-wrap mb-5 justify-between">
-                        {workspaces?.available.length === 0 && <p className="text-center w-full">No Workspaces Available</p>}
+                        {workspaces?.available.length === 0 &&
+                            <p className="text-center w-full">No Workspaces Available</p>}
                         {workspaces?.available.map((workspace) => (
                             <button key={workspace.id} onClick={() => selectWorkspace(workspace.id)}
                                     style={{
@@ -73,7 +80,8 @@ const ActionPanel: React.FC<PanelProps> = ({visible, handleWorkspaceVisibility})
             text-md font-medium mb-2 hover:bg-violet-900">{visible ? "Hide" : "Show "} Workspace
                         </button>
                         <button onClick={() => {
-                            workspaces?.selectedWorkspace && removeWorkspace(workspaces?.selectedWorkspace)}} className="w-[98%] bg-violet-700 text-white px-3 h-8 mt-2 rounded-md
+                            workspaces?.selectedWorkspace && removeWorkspace(workspaces?.selectedWorkspace)
+                        }} className="w-[98%] bg-violet-700 text-white px-3 h-8 mt-2 rounded-md
             text-md font-medium mb-2 hover:bg-violet-900 ml-2">Remove Workspace
                         </button>
                     </div>
