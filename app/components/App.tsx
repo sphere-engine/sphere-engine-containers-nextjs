@@ -22,6 +22,7 @@ export const App = () => {
     const workspaces = useContext(WorkspacesContext);
     const [visible, setVisible] = useState<boolean>(true);
     const [workspace, setWorkspace] = useState<React.ReactNode | null>(null);
+    const [renderedWorkspaces, setRenderedWorkspaces] = useState<React.ReactNode[]>([]);
     const [rendered, setRendered] = useState<boolean>(true);
     const [size, setSize] = useState<string>(SIZES.large);
     const [modal, setModal] = useState<boolean>(false);
@@ -54,14 +55,21 @@ export const App = () => {
         setMessage(modal ? MESSAGE.modal : MESSAGE.start)
     }
 
-
     useEffect(() => {
-        if (workspaces?.selectedWorkspace && rendered && !modal) {
-            setWorkspace(<Workspace workspaceId={workspaces?.selectedWorkspace} key={Date.now()}/>) // bez key przy zmianie workspace nie renderuje sie od nowa (#3)
-        } else {
-            setWorkspace(null);
+        if (workspaces?.renderedWorkspaces) {
+            const rendered = workspaces?.renderedWorkspaces.map((ws: string) => {
+                const isSelected = ws === workspaces.selectedWorkspace;
+                const displayStyle = isSelected ? "block" : "none";
+                return (
+                    <div key={ws} style={{display: displayStyle}} className="w-full h-full">
+                        <Workspace workspaceId={ws} key={ws}/>
+                    </div>
+                );
+            });
+            setRenderedWorkspaces(rendered);
         }
-    },[modal, rendered, workspaces?.selectedWorkspace])
+    }, [workspaces?.renderedWorkspaces, workspaces?.selectedWorkspace]);
+
 
     return (
         <div className="flex row w-full justify-between h-full">
@@ -69,16 +77,18 @@ export const App = () => {
             <ScriptLoader/>
 
             <div className={`${size} m-auto`}>
-                {workspace ?
+                {workspaces?.selectedWorkspace ?
                     <div className="flex justify-center h-[100%]">
-                        <div className="flex grow" style={{display: visible ? "block" : "none"}}>{workspace}</div>
+                        <div className="flex grow"
+                             style={{display: visible ? "block" : "none"}}>{renderedWorkspaces}</div>
                         <div className="text-center m-auto text-2xl"
                              style={{display: !visible ? "block" : "none"}}>Workspace Hidden
                         </div>
                     </div> :
                     <div className="flex justify-center h-[100%]">
                         <p className="text-center m-auto text-2xl">{message}</p>
-                    </div>}
+                    </div>
+                }
             </div>
 
             <div className="w-[22%] mr-7 ml-7">

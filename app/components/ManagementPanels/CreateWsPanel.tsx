@@ -55,7 +55,7 @@ export const CreateWsPanel = () => {
                 <button
                     className="w-[20%] bg-violet-700 text-white px-3 h-8 rounded-md text-md font-medium mb-1 hover:bg-violet-900"
                     onClick={() => {
-                        createWorkspace(accessToken.current, projectId.current)
+                        createWorkspace(accessToken.current, projectId.current).then();
                     }}
                 >Create
                 </button>

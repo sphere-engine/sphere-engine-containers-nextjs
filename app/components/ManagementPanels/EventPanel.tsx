@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useRef, useState} from "react";
+import React, {useContext, useRef} from "react";
 import {WorkspacesContext, WorkspacesDispatchContext} from "@/app/components/Reducers/WorkspacesReducer";
 
 const EventLogger = () => {
@@ -15,18 +15,8 @@ const EventLogger = () => {
         afterScenarioExecutionExt: null
     });
 
-    // const EventLogger = (e: any) => {
-    //     setEvents(prevState => [...prevState, e.data])
-    // }
-    //
-    //  ws.events.subscribe("afterScenarioExecution", EventLogger)
-    // ws.events.subscribe("afterScenarioExecutionExt", EventLogger)
-    //
-    //  ws.events.unsubscribe("afterScenarioExecution", EventLogger)
-    // ws.events.unsubscribe("afterScenarioExecutionExt", EventLogger)
-    // jak ta funkcja jest uzyta zamiast w to wystepuje warn "specified callback does not exist", ale same subskrypcje dalej działaja(#4)
-
     const addEvent = (e: any) => {
+        console.log('A')
         if (workspace) {
             dispatch?.({
                 type: "ADD_EVENT",
@@ -64,6 +54,7 @@ const EventLogger = () => {
 
     return (
         <>
+            {workspace}
             <ul className="flex justify-center mt-2">
                 <li className="mr-4">
                     <input type="checkbox" id="afterScenarioExecutionExt" name="afterScenarioExecutionExt"

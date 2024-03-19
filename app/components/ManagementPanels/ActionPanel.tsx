@@ -31,6 +31,12 @@ const ActionPanel: React.FC<PanelProps> = ({visible, handleWorkspaceVisibility})
         }
     }
 
+    const addRenderedWorkspace = (id: string) => {
+        if (dispatch) {
+            dispatch({type: "ADD_RENDERED_WS", payload: id});
+        }
+    }
+
     return (
         <div className="mt-2">
             <p className="text-xl text-center font-bold">Workspace Management</p>
@@ -54,25 +60,35 @@ const ActionPanel: React.FC<PanelProps> = ({visible, handleWorkspaceVisibility})
                     </button>
                 </div>
                 <div className="w-full">
-                <p className="text-center text-sm text-gray-500  font-light">or create new</p>
-                <CreateWsPanel/>
+                    <p className="text-center text-sm text-gray-500  font-light">or create new</p>
+                    <CreateWsPanel/>
                 </div>
                 <div className="w-full">
                     <p className="text-md text-center mt-3 mb-2">Available WS:</p>
                     <div className="flex row flex-wrap mb-5 justify-between">
                         {workspaces?.available.length === 0 &&
-                            <p className="text-center w-full">No Workspaces Available</p>}
+                            <p className="w-full text-center">No Workspaces Available</p>}
                         {workspaces?.available.map((workspace) => (
-                            <button key={workspace.id} onClick={() => selectWorkspace(workspace.id)}
+                            <div key={workspace.id} onClick={() => addRenderedWorkspace(workspace.id)}
                                     style={{
-                                        backgroundColor: workspaces?.selectedWorkspace === workspace.id ? "violet" : "white",
+                                        backgroundColor: workspaces?.renderedWorkspaces.includes(workspace.id) ? "violet" : "white",
+                                        borderColor: workspaces?.selectedWorkspace === workspace.id ? "darkviolet" : "lightgray",
                                         width: workspaces?.available?.length > 2 ? (100 / workspaces?.available.length + "%") : "100%",
                                         minWidth: "49.5%",
-                                        fontSize: workspaces?.available?.length > 2 ? "0.68rem" : "0.8rem"
+                                        fontSize: workspaces?.available?.length > 2 ? "0.62rem" : "0.8rem",
+                                        textAlign: workspaces?.available?.length > 2 ? "left" : "center",
+                                        paddingLeft: workspaces?.available?.length > 2 ? "1%" : "0",
+                                        cursor: "pointer"
                                     }}
-                                    className="h-8 mb-1 border-2 border-gray-400 rounded-md font-medium">
+                                    className="h-8 mb-1 pt-1 border-2 border-gray-400 rounded-md font-medium">
                                 {workspace.id}
-                            </button>
+                                <button onClick={(e) => {
+                                    e.stopPropagation()
+                                    selectWorkspace(workspace.id)
+                                }}
+                                        className="text-purple-600 rounded-md text-xs px-[1.5px] ml-1 font-medium hover:text-purple-950">➤
+                                </button>
+                            </div>
                         ))}
                     </div>
                     <div className="flex row">

@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from 'react';
+import React, {memo, useEffect, useState} from 'react';
 
-const Workspace: React.FC<{ workspaceId: string}> = ({workspaceId}) => {
+const Workspace: React.FC<{ workspaceId: string}> = memo(({workspaceId}) => {
     const elemId = workspaceId + "-container";
     const [created, setCreated] = useState<boolean>(false);
 
@@ -21,13 +21,15 @@ const Workspace: React.FC<{ workspaceId: string}> = ({workspaceId}) => {
                 console.log("Workspace destroyed")
             }
         }
-    }, [created]);
+    }, [created, elemId]);
 
     return (
         <div style={{width: '100%', height: '100%'}}>
             <div data-id={elemId} data-workspace={workspaceId}></div>
         </div>
     );
-};
+});
+
+Workspace.displayName = "Workspace";
 
 export default Workspace;

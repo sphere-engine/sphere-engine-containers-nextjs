@@ -3,6 +3,7 @@ import {useReducer, createContext, ReactNode, Dispatch} from "react";
 type State = {
     available: Workspace[];
     selectedWorkspace: string | null;
+    renderedWorkspaces: string[];
 };
 
 type Action = {
@@ -21,6 +22,7 @@ type Workspace = {
 const initialState: State = {
     available: [],
     selectedWorkspace: null,
+    renderedWorkspaces: []
 };
 
 const WorkspacesContext = createContext<State | null>(null);
@@ -58,6 +60,9 @@ export function workspacesReducer(state: any, action: any) {
             return {
                 ...state,
                 selectedWorkspace: action.payload,
+                renderedWorkspaces: state.renderedWorkspaces.includes(action.payload) ?
+                    state.renderedWorkspaces :
+                    [...state.renderedWorkspaces, action.payload]
             };
         case "REMOVE_WORKSPACE":
             if (state.selectedWorkspace === action.payload) {
@@ -100,7 +105,15 @@ export function workspacesReducer(state: any, action: any) {
                     return ws;
                 })
             }
+        case "ADD_RENDERED_WS":
+            return {
+                ...state,
+                renderedWorkspaces: state.renderedWorkspaces.includes(action.payload) ?
+                    state.renderedWorkspaces.filter((ws: string) => ws !== action.payload) :
+                    [...state.renderedWorkspaces, action.payload],
+                selectedWorkspace: state.selectedWorkspace === action.payload ? null : state.selectedWorkspace
 
+            }
         default:
             return state;
 

@@ -1,7 +1,6 @@
 import React from 'react';
 import ActionPanel from "@/app/components/ManagementPanels/ActionPanel";
 import EventPanel from "@/app/components/ManagementPanels/EventPanel";
-import {CreateWsPanel} from "@/app/components/ManagementPanels/CreateWsPanel";
 
 interface PanelProps {
     visible: boolean;
