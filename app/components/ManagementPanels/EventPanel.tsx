@@ -54,7 +54,6 @@ const EventLogger = () => {
 
     return (
         <>
-            {workspace}
             <ul className="flex justify-center mt-2">
                 <li className="mr-4">
                     <input type="checkbox" id="afterScenarioExecutionExt" name="afterScenarioExecutionExt"

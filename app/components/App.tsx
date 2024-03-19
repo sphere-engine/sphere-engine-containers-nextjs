@@ -56,6 +56,7 @@ export const App = () => {
     }
 
     useEffect(() => {
+        if(!modal){
         if (workspaces?.renderedWorkspaces) {
             const rendered = workspaces?.renderedWorkspaces.map((ws: string) => {
                 const isSelected = ws === workspaces.selectedWorkspace;
@@ -67,8 +68,10 @@ export const App = () => {
                 );
             });
             setRenderedWorkspaces(rendered);
+        }} else {
+            setRenderedWorkspaces([]);
         }
-    }, [workspaces?.renderedWorkspaces, workspaces?.selectedWorkspace]);
+    }, [workspaces?.renderedWorkspaces, workspaces?.selectedWorkspace, modal]);
 
 
     return (
