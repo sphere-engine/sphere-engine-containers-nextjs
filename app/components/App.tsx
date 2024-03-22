@@ -21,7 +21,6 @@ const MESSAGE = {
 export const App = () => {
     const workspaces = useContext(WorkspacesContext);
     const [visible, setVisible] = useState<boolean>(true);
-    const [workspace, setWorkspace] = useState<React.ReactNode | null>(null);
     const [renderedWorkspaces, setRenderedWorkspaces] = useState<React.ReactNode[]>([]);
     const [rendered, setRendered] = useState<boolean>(true);
     const [size, setSize] = useState<string>(SIZES.large);
@@ -73,6 +72,9 @@ export const App = () => {
         }
     }, [workspaces?.renderedWorkspaces, workspaces?.selectedWorkspace, modal]);
 
+    useEffect(() => {
+        setRendered(true)
+    }, [workspaces?.selectedWorkspace]);
 
     return (
         <div className="flex row w-full justify-between h-full">
@@ -80,7 +82,7 @@ export const App = () => {
             <ScriptLoader/>
 
             <div className={`${size} m-auto`}>
-                {workspaces?.selectedWorkspace ?
+                {workspaces?.selectedWorkspace && rendered ?
                     <div className="flex justify-center h-[100%]">
                         <div className="flex grow"
                              style={{display: visible ? "block" : "none"}}>{renderedWorkspaces}</div>

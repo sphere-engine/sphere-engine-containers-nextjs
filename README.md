@@ -35,16 +35,15 @@ a log output below.
 
 You need to include the SDKLoader in parent component above where the workspace will be rendered.
 
-```
+
 <div>
             <ScriptLoader/>
 
             <div>
                 {workspace &&
-                    <div>{workspace}</div>
+                    <div>{workspace}</div>}
             </div>
 </div>
-```
 
 Where 'workspace' is a component that render given workspace: 
 ```
@@ -91,7 +90,7 @@ const ws = window.SE.workspace(elemId);
                 ws?.destroy();
 ```
 
-The window.SE.ready() function is used to make sure that the SDK is loaded before creating the workspace and is required 
+The ```window.SE.ready()``` function is used to make sure that the SDK is loaded before creating the workspace and is required 
 for the SDK to work properly.
 
 Rest of components in the example is used to manage (e.g. add, create, render, subscribe) the workspace and subscribe to events from it.

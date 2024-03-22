@@ -1,7 +1,6 @@
 import React, {useRef, useContext} from 'react';
 import {WorkspacesDispatchContext} from "@/app/components/Reducers/WorkspacesReducer";
 import {WorkspacesContext} from "@/app/components/Reducers/WorkspacesReducer";
-import {CreateWsPanel} from "@/app/components/ManagementPanels/CreateWsPanel";
 
 interface PanelProps {
     visible: boolean;
@@ -60,19 +59,15 @@ const ActionPanel: React.FC<PanelProps> = ({visible, handleWorkspaceVisibility})
                     </button>
                 </div>
                 <div className="w-full">
-                    <p className="text-center text-sm text-gray-500  font-light">or create new</p>
-                    <CreateWsPanel/>
-                </div>
-                <div className="w-full">
                     <p className="text-md text-center mt-3 mb-2">Available WS:</p>
                     <div className="flex row flex-wrap mb-5 justify-between">
                         {workspaces?.available.length === 0 &&
                             <p className="w-full text-center">No Workspaces Available</p>}
                         {workspaces?.available.map((workspace) => (
-                            <div key={workspace.id} onClick={() => addRenderedWorkspace(workspace.id)}
+                            <div key={workspace.id}
                                     style={{
                                         backgroundColor: workspaces?.renderedWorkspaces.includes(workspace.id) ? "violet" : "white",
-                                        borderColor: workspaces?.selectedWorkspace === workspace.id ? "darkviolet" : "lightgray",
+                                        borderColor: workspaces?.selectedWorkspace === workspace.id ? "darkviolet" : "#888888",
                                         width: workspaces?.available?.length > 2 ? (100 / workspaces?.available.length + "%") : "100%",
                                         minWidth: "49.5%",
                                         fontSize: workspaces?.available?.length > 2 ? "0.62rem" : "0.8rem",
@@ -80,17 +75,22 @@ const ActionPanel: React.FC<PanelProps> = ({visible, handleWorkspaceVisibility})
                                         paddingLeft: workspaces?.available?.length > 2 ? "1%" : "0",
                                         cursor: "pointer"
                                     }}
-                                    className="h-8 mb-1 pt-1 border-2 border-gray-400 rounded-md font-medium">
+                                    className="h-8 mb-1 pt-[0.5px] border-2 border-gray-400 rounded-md font-medium">
                                 {workspace.id}
-                                <button onClick={(e) => {
-                                    e.stopPropagation()
+                                <button onClick={() => addRenderedWorkspace(workspace.id)}
+                                        className="bg-violet-700 text-white py-[3px] px-[5px] w-14 rounded-md text-md font-medium mb-1 hover:bg-violet-900 ml-5">
+                                    {workspaces?.renderedWorkspaces.includes(workspace.id) ? "Unload" : "Load"}
+                                </button>
+                                <button onClick={() => {
                                     selectWorkspace(workspace.id)
                                 }}
-                                        className="text-purple-600 rounded-md text-xs px-[1.5px] ml-1 font-medium hover:text-purple-950">➤
+                                        disabled={workspaces?.selectedWorkspace === workspace.id}
+                                        className="bg-violet-700 text-white py-[3px] px-[5px] w-14 rounded-md text-md font-medium mb-1 hover:bg-violet-900 ml-3 disabled:bg-violet-400">Display
                                 </button>
                             </div>
                         ))}
                     </div>
+                    {workspaces?.selectedWorkspace &&
                     <div className="flex row">
                         <button onClick={handleWorkspaceVisibility} className="w-[98%] bg-violet-700 text-white px-3 h-8 mt-2 rounded-md
             text-md font-medium mb-2 hover:bg-violet-900">{visible ? "Hide" : "Show "} Workspace
@@ -101,6 +101,7 @@ const ActionPanel: React.FC<PanelProps> = ({visible, handleWorkspaceVisibility})
             text-md font-medium mb-2 hover:bg-violet-900 ml-2">Remove Workspace
                         </button>
                     </div>
+                    }
                 </div>
             </div>
         </div>
