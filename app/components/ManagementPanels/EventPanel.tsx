@@ -69,6 +69,11 @@ const EventLogger = () => {
                     }
                     console.log('Subscribing to afterScenarioExecution', workspace)
                     ws.events.subscribe("afterScenarioExecution", eventListeners.current.afterScenarioExecution);
+                } else {
+                    if (eventListeners.current.afterScenarioExecution) {
+                        console.log('Unsubscribing from afterScenarioExecution', workspace)
+                        ws.events.unsubscribe("afterScenarioExecution", eventListeners.current.afterScenarioExecution);
+                    }
                 }
 
                 if (subscriptions.afterScenarioExecutionExt) {
@@ -77,6 +82,11 @@ const EventLogger = () => {
                     }
                     console.log('Subscribing to afterScenarioExecutionExt', workspace)
                     ws.events.subscribe("afterScenarioExecutionExt", eventListeners.current.afterScenarioExecutionExt);
+                } else {
+                    if (eventListeners.current.afterScenarioExecutionExt) {
+                        console.log('Unsubscribing from afterScenarioExecutionExt', workspace)
+                        ws.events.unsubscribe("afterScenarioExecutionExt", eventListeners.current.afterScenarioExecutionExt);
+                    }
                 }
 
 
