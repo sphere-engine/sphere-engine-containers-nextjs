@@ -75,17 +75,17 @@ const ActionPanel: React.FC<PanelProps> = ({visible, handleWorkspaceVisibility})
                                         paddingLeft: workspaces?.available?.length > 2 ? "1%" : "0",
                                         cursor: "pointer"
                                     }}
-                                    className="h-8 mb-1 pt-[0.5px] border-2 border-gray-400 rounded-md font-medium">
-                                {workspace.id}
+                                    className="h-8 mb-1 border-2 border-gray-400 rounded-md font-medium flex row w-full items-center justify-center">
+                                <p className="w-[60%]">{ workspaces?.available?.length > 2 ? workspace.id.substring(0,5)+"..."+workspace.id.substring(27,32) : workspace.id}</p>
                                 <button onClick={() => addRenderedWorkspace(workspace.id)}
-                                        className="bg-violet-700 text-white py-[3px] px-[5px] w-14 rounded-md text-md font-medium mb-1 hover:bg-violet-900 ml-5">
+                                        className="bg-violet-700 text-white py-[3px] px-[5px] w-14 rounded-md text-md font-medium hover:bg-violet-900">
                                     {workspaces?.renderedWorkspaces.includes(workspace.id) ? "Unload" : "Load"}
                                 </button>
                                 <button onClick={() => {
                                     selectWorkspace(workspace.id)
                                 }}
                                         disabled={workspaces?.selectedWorkspace === workspace.id}
-                                        className="bg-violet-700 text-white py-[3px] px-[5px] w-14 rounded-md text-md font-medium mb-1 hover:bg-violet-900 ml-3 disabled:bg-violet-400">Display
+                                        className="bg-violet-700 text-white py-[3px] px-[5px] w-14 rounded-md text-md font-medium hover:bg-violet-900 ml-[3%] disabled:bg-violet-400 mr-1">Display
                                 </button>
                             </div>
                         ))}

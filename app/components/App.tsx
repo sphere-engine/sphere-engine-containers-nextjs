@@ -60,6 +60,7 @@ export const App = () => {
             const rendered = workspaces?.renderedWorkspaces.map((ws: string) => {
                 const isSelected = ws === workspaces.selectedWorkspace;
                 const displayStyle = isSelected ? "block" : "none";
+                const subscriptions = workspaces.available.find((w) => w.id === ws)?.subscriptions;
                 return (
                     <div key={ws} style={{display: displayStyle}} className="w-full h-full">
                         <Workspace workspaceId={ws} key={ws}/>

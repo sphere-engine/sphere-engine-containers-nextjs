@@ -114,6 +114,19 @@ export function workspacesReducer(state: any, action: any) {
                 selectedWorkspace: state.selectedWorkspace === action.payload ? null : state.selectedWorkspace
 
             }
+        case "CLEAR_EVENTS":
+            return {
+                ...state,
+                available: state.available.map((ws: Workspace) => {
+                    if (ws.id === action.payload) {
+                        return {
+                            ...ws,
+                            events: []
+                        }
+                    }
+                    return ws;
+                })
+            }
         default:
             return state;
 
