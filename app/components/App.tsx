@@ -80,6 +80,8 @@ export const App = () => {
 
     useEffect(() => {
         setRendered(true)
+        setVisible(true)
+        setMessage(MESSAGE.start)
     }, [workspaces?.selectedWorkspace]);
 
     return (
@@ -88,7 +90,7 @@ export const App = () => {
             <ScriptLoader/>
 
             <div className={`${size} m-auto`}>
-                {!workspaces?.selectedWorkspace && workspaces?.renderedWorkspaces?.length != 0 && <p className="absolute top-[48.3%] left-[32.04%] text-center m-auto text-2xl">{message}</p>}
+                {!workspaces?.selectedWorkspace && workspaces?.renderedWorkspaces?.length != 0 && visible && <p className="absolute top-[48.3%] left-[32.04%] text-center m-auto text-2xl">{message}</p>}
                 {workspaces?.renderedWorkspaces.length != 0 && rendered  ?
                     <div className="flex justify-center h-[100%]">
                         <div className="flex grow"

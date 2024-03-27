@@ -69,7 +69,8 @@ export function workspacesReducer(state: any, action: any) {
                 return {
                     ...state,
                     selectedWorkspace: null,
-                    available: state.available.filter((ws: Workspace) => ws.id !== action.payload)
+                    available: state.available.filter((ws: Workspace) => ws.id !== action.payload),
+                    renderedWorkspaces: state.renderedWorkspaces.filter((ws: string) => ws !== action.payload)
                 };
             }
             return {
