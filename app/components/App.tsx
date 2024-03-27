@@ -4,7 +4,6 @@ import {WorkspacesContext} from "@/app/components/Reducers/WorkspacesReducer";
 import ScriptLoader from "@/app/components/SDK/SdkLoader";
 import Workspace from "@/app/components/Workspace";
 import {WorkspaceModal} from "@/app/components/Modal/Modal";
-import workspace from "@/app/components/Workspace";
 
 const SIZES = {
     "small": "w-[40%] h-[60vh]",
