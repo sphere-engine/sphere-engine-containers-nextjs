@@ -4,6 +4,7 @@ import {WorkspacesContext} from "@/app/components/Reducers/WorkspacesReducer";
 import ScriptLoader from "@/app/components/SDK/SdkLoader";
 import Workspace from "@/app/components/Workspace";
 import {WorkspaceModal} from "@/app/components/Modal/Modal";
+import workspace from "@/app/components/Workspace";
 
 const SIZES = {
     "small": "w-[40%] h-[60vh]",
@@ -60,7 +61,6 @@ export const App = () => {
             const rendered = workspaces?.renderedWorkspaces.map((ws: string) => {
                 const isSelected = ws === workspaces.selectedWorkspace;
                 const displayStyle = isSelected ? "block" : "none";
-                const subscriptions = workspaces.available.find((w) => w.id === ws)?.subscriptions;
                 return (
                     <div key={ws} style={{display: displayStyle}} className="w-full h-full">
                         <Workspace workspaceId={ws} key={ws}/>
@@ -71,7 +71,12 @@ export const App = () => {
         }} else {
             setRenderedWorkspaces([]);
         }
-    }, [workspaces?.renderedWorkspaces, workspaces?.selectedWorkspace, modal]);
+
+        if(workspaces?.renderedWorkspaces.length === 0){
+            setVisible(true);
+            setMessage(MESSAGE.start)
+        }
+    }, [workspaces?.renderedWorkspaces, workspaces?.selectedWorkspace, modal, workspaces?.available]);
 
     useEffect(() => {
         setRendered(true)
@@ -83,7 +88,8 @@ export const App = () => {
             <ScriptLoader/>
 
             <div className={`${size} m-auto`}>
-                {workspaces?.selectedWorkspace && rendered ?
+                {!workspaces?.selectedWorkspace && workspaces?.renderedWorkspaces?.length != 0 && <p className="absolute top-[48.3%] left-[32.04%] text-center m-auto text-2xl">{message}</p>}
+                {workspaces?.renderedWorkspaces.length != 0 && rendered  ?
                     <div className="flex justify-center h-[100%]">
                         <div className="flex grow"
                              style={{display: visible ? "block" : "none"}}>{renderedWorkspaces}</div>
@@ -98,7 +104,7 @@ export const App = () => {
             </div>
 
             <div className="w-[22%] mr-7 ml-7">
-                <Panel visible={visible} handleWorkspaceVisibility={handleWorkspaceVisibility}/>
+                <Panel visible={visible} handleWorkspaceVisibility={handleWorkspaceVisibility} setMessage={setMessage}/>
                 {workspaces?.selectedWorkspace &&
                     <>
                         <button onClick={handleRender}
