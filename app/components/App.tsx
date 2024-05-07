@@ -3,6 +3,7 @@
 import React, {ReactNode, useContext} from 'react';
 import {WorkspaceContext} from "@/app/components/Reducers/WorkspaceReducer";
 import MainPanel from "@/app/components/Panels/MainPanel";
+import VisibilityPanel from "@/app/components/Panels/VisibilityPanel";
 
 const App = () => {
     const workspaces = useContext(WorkspaceContext);
@@ -53,10 +54,11 @@ const App = () => {
                         </button>
                         <p className="text-xl font-semibold text-center">WS Modal</p>
                         {workspaces?.selectedWorkspace && (
-                            <div className="flex flex-col mt-2 w-full h-[95%] justify-center items-center m-auto">
+                            <div className="flex flex-col mt-2 w-full h-[92%] justify-center items-center m-auto mb-1.5">
                                 {workspaces.renderedWorkspaces.find((ws: any) => ws.id === workspaces.selectedWorkspace)?.ws}
                             </div>
                         )}
+                        <VisibilityPanel toggleModal={toggleModal} isModal={isModal}  />
                     </div>
                 </div>
             )}

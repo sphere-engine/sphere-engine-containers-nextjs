@@ -7,7 +7,7 @@ const MainPanel = ({isModal}: {isModal: () => void}) => {
     return (
         <div>
             <ActionPanel/>
-            <VisibilityPanel isModal={isModal}/>
+            <VisibilityPanel toggleModal={isModal}/>
             <EventPanel />
         </div>
     )

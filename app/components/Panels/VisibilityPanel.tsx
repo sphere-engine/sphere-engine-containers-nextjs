@@ -7,7 +7,7 @@ const SIZES = {
     "large": {width: "100%", height: "100%"}
 }
 
-const VisibilityPanel = ({isModal}: { isModal: () => void }) => {
+const VisibilityPanel = ({toggleModal, isModal}: { toggleModal: () => void, isModal: boolean }) => {
     const dispatch = useContext(WorkspaceDispatchContext);
     const workspaces = useContext(WorkspaceContext);
 
@@ -34,6 +34,7 @@ const VisibilityPanel = ({isModal}: { isModal: () => void }) => {
         }
     }
 
+    if(!isModal) {
     return (
         <>
             {workspace ? (
@@ -58,13 +59,30 @@ const VisibilityPanel = ({isModal}: { isModal: () => void }) => {
                         }} className="bg-violet-700 text-white px-3 h-8 rounded-md
                         text-md font-medium mb-2 hover:bg-violet-900 w-[50%] mr-2">Change Size
                         </button>
-                        <button onClick={() => isModal()} className="bg-violet-700 text-white px-3 h-8 rounded-md
+                        <button onClick={() => toggleModal()} className="bg-violet-700 text-white px-3 h-8 rounded-md
                         text-md font-medium mb-2 hover:bg-violet-900 w-[50%]">Open Modal
                         </button>
                     </div>
                 </div>
             ) : null}
         </>
+    );
+}
+    return (
+        <div className="text-center">
+            <button onClick={() => {
+                updateWorkspaceVisibility({visible: typeof props?.visible === "undefined" ? false : !props?.visible})
+            }} className="bg-violet-700 text-white px-3 h-8 rounded-md
+            text-md font-medium mb-2 mr-2 hover:bg-violet-900">{typeof props?.visible === "undefined" ? "Hide" : props?.visible ? "Hide" : "Show"} WS
+            </button>
+            <button onClick={() => {
+                const currentHeight = props?.height || "100%";
+                const newSize = currentHeight === "100%" ? "small" : currentHeight === "60%" ? "medium" : "large";
+                updateWorkspaceSize(SIZES[newSize])
+            }} className="bg-violet-700 text-white px-3 h-8 rounded-md
+                        text-md font-medium mb-2 hover:bg-violet-900 mr-2">Change Size
+            </button>
+        </div>
     );
 }
 
